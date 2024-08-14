@@ -6,6 +6,7 @@ import ErrorMessage from './components/ErrorMessage/ErrorMessage';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './components/ImageModal/ImageModal';
 import { fetchImages } from './api';
+import { Toaster, toast } from 'react-hot-toast';
 import './App.css';
 
 function App() {
@@ -21,25 +22,30 @@ function App() {
   useEffect(() => {
     if (!query) return;
 
-     const loadImages = async () => {
+    const loadImages = async () => {
       setLoading(true);
-      setError(null);
+      setError(null); 
+
       try {
         const data = await fetchImages(query, page);
         setImages(prevImages => [...prevImages, ...data.results]);
         setShowBtn(data.total_pages && data.total_pages > page);
-      } catch {
-        setError('Failed to load images. Please try again later.');
+      } catch (error) {
+        setError(error.message || 'Failed to load images. Please try again later.');
+
       } finally {
         setLoading(false);
       }
     };
 
-
     loadImages();
   }, [query, page]);
 
   const handleSearchSubmit = (searchQuery) => {
+    if (!searchQuery.trim()) {
+      toast.error('Please enter a search term.');
+      return;
+    }
     setQuery(searchQuery);
     setImages([]);
     setPage(1);
@@ -65,7 +71,7 @@ function App() {
       {error && <ErrorMessage message={error} />}
       <ImageGallery images={images} onImageClick={handleImageClick} />
       {loading && <Loader />}
-      {showBtn && !loading && <LoadMoreBtn onClick={handleLoadMore} />}
+      {!error && showBtn && !loading && <LoadMoreBtn onClick={handleLoadMore} />}
       {isModalOpen && (
         <ImageModal
           isOpen={isModalOpen}
@@ -73,7 +79,9 @@ function App() {
           image={modalImage}
         />
       )}
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 }
+
 export default App;

@@ -1,3 +1,4 @@
+
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import styles from './ImageModal.module.css';

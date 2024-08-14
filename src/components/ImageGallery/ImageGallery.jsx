@@ -1,16 +1,23 @@
 import PropTypes from 'prop-types';
 import styles from './ImageGallery.module.css';
-import ImageCard from '../ImageCard/ImageCard';
 
 function ImageGallery({ images, onImageClick }) {
   return (
-    <ul className={styles.gallery}>
-      {images.map(image => (
-        <li key={image.id} className={styles.galleryItem}>
-          <ImageCard image={image} onClick={() => onImageClick(image)} />
-        </li>
+    <div className={styles.gallery}>
+      {images.map((image) => (
+        <div key={image.id} className={styles.imageCard} onClick={() => onImageClick(image)}>
+          <img
+            src={image.urls.small}
+            alt={image.alt_description}
+            className={styles.image}
+          />
+          <div className={styles.imageInfo}>
+            <p className={styles.author}>Author: {image.user.name}</p>
+            <p className={styles.likes}>Likes: {image.likes}</p>
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
 
