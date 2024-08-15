@@ -1,28 +1,38 @@
 import PropTypes from 'prop-types';
+import ImageCard from '../ImageCard/ImageCard';
 import styles from './ImageGallery.module.css';
 
 function ImageGallery({ images, onImageClick }) {
   return (
-    <div className={styles.gallery}>
+    <ul className={styles.gallery}>
       {images.map((image) => (
-        <div key={image.id} className={styles.imageCard} onClick={() => onImageClick(image)}>
-          <img
-            src={image.urls.small}
-            alt={image.alt_description}
-            className={styles.image}
-          />
+        <li key={image.id} className={styles.galleryItem}>
+          <ImageCard image={image} onClick={() => onImageClick(image)} />
           <div className={styles.imageInfo}>
-            <p className={styles.author}>Author: {image.user.name}</p>
-            <p className={styles.likes}>Likes: {image.likes}</p>
+            <p>Автор: {image.user.name}</p>
+            <div className={styles.likes}>
+              <i className="fa fa-heart"></i> {image.likes}
+            </div>
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
 ImageGallery.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.object).isRequired,
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      user: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+      likes: PropTypes.number.isRequired,
+      urls: PropTypes.shape({
+        small: PropTypes.string.isRequired,
+      }).isRequired,
+    })
+  ).isRequired,
   onImageClick: PropTypes.func.isRequired,
 };
 
