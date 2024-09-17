@@ -1,8 +1,13 @@
-import PropTypes from 'prop-types';
 import ImageCard from '../ImageCard/ImageCard';
 import styles from './ImageGallery.module.css';
+import { Image } from '../App/App.types'; 
 
-function ImageGallery({ images, onImageClick }) {
+interface ImageGalleryProps {
+  images: Image[];
+  onImageClick: (image: Image) => void;
+}
+
+const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImageClick }) => {
   return (
     <ul className={styles.gallery}>
       {images.map((image) => (
@@ -18,22 +23,6 @@ function ImageGallery({ images, onImageClick }) {
       ))}
     </ul>
   );
-}
-
-ImageGallery.propTypes = {
-  images: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      user: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-      }).isRequired,
-      likes: PropTypes.number.isRequired,
-      urls: PropTypes.shape({
-        small: PropTypes.string.isRequired,
-      }).isRequired,
-    })
-  ).isRequired,
-  onImageClick: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;

@@ -1,8 +1,19 @@
 import axios from 'axios';
+
 const API_KEY = 'NGRc-9E_xYC5jKiByp3l2ywPCwiw5uWagtLaRf454ik';
 const BASE_URL = 'https://api.unsplash.com';
 
-export const fetchImages = async (query, page = 1) => {
+interface ImageResponse {
+  results: Array<{
+    id: string;
+    user: { name: string };
+    likes: number;
+    urls: { small: string; regular?: string }; 
+  }>;
+  total_pages: number;
+}
+
+export const fetchImages = async (query: string, page = 1): Promise<ImageResponse> => {
   try {
     const response = await axios.get(`${BASE_URL}/search/photos`, {
       params: {
@@ -18,8 +29,7 @@ export const fetchImages = async (query, page = 1) => {
     }
 
     return response.data;
-  } catch (error) {
-    // Simply rethrow the error without logging it here
+  } catch (error: any) {
     throw new Error(error.response?.data?.errors?.[0] || 'Failed to fetch images');
   }
 };
